@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon" href="assets/linux.png" type="image/png">
+  <link rel="icon" href="assets/linux.png" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/linux.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/linux.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/linux.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
@@ -13,10 +18,15 @@
       <br>Type 'help' to see available commands.
       <br>If you would like to clear your terminal press ESC.
     </div>
+    <div id="colorPicker" class="color-circle"></div>
     <div class="input">
       <input id="commandInput" type="text" placeholder="Enter a command">
     </div>
   </div>
   <script src="script.js"></script>
+  <script src="colorPicker.js"></script>
+  <footer>
+    <p>&copy; 2023 JVideo. All rights reserved.</p>
+  </footer>
 </body>
 </html>
