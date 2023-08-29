@@ -3,13 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linux Terminal</title>
   <link rel="stylesheet" href="styles.css">
+  <title>Linux Terminal</title>
 </head>
 <body>
   <div class="terminal">
-    <pre id="output"></pre>
-    <input id="input" type="text" autofocus />
+    <div class="output" id="output">
+      Welcome to My Linux Terminal! (Made by: JVideo)
+      <br>Type 'help' to see available commands.
+      <br>If you would like to clear your terminal press ESC.
+    </div>
+    <div class="input">
+      <input id="commandInput" type="text" placeholder="Enter a command">
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
