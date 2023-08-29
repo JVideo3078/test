@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #282c36;
+  font-family: 'Courier New', monospace;
+}
+
+.terminal {
+  width: 80%;
+  max-width: 600px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.output {
+  background-color: #1e1e1e;
+  color: #00ff00;
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 200px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.input {
+  background-color: #1e1e1e;
+  padding: 10px;
+  display: flex;
+}
+
+input {
+  flex-grow: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: #00ff00;
+  font-size: 14px;
+}
