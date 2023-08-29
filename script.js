@@ -1,42 +1,103 @@
-const output = document.getElementById('output');
-const input = document.getElementById('input');
+const outputElement = document.getElementById('output');
+const inputElement = document.getElementById('commandInput');
 
-input.addEventListener('keydown', async function (event) {
+let currentDirectory = '/';
+let directories = {
+  '/': ['bin', 'home', 'etc'],
+  '/bin': ['ls', 'cd', 'vim'],
+  '/home': ['user'],
+  '/etc': ['config'],
+  '/home/user': ['file1.txt', 'file2.txt']
+};
+inputElement.addEventListener('keyup', function(event) {
   if (event.key === 'Enter') {
-    event.preventDefault();
-    const command = input.value;
-    output.innerHTML += `<span>$ ${command}</span><br>`;
-    input.value = '';
+    const command = inputElement.value.trim().toLowerCase();
+    executeCommand(command);
+    inputElement.value = '';
+  }
+});
 
-    switch (command.trim()) {
-      case 'ls':
-        output.innerHTML += 'file1.txt  file2.txt  folder1<br>';
-        break;
-      case 'pwd':
-        output.innerHTML += '/home/user<br>';
-        break;
-      case 'date':
-        const currentDate = new Date();
-        output.innerHTML += `${currentDate}<br>`;
-        break;
-      case 'help':
-        output.innerHTML += 'Available commands: ls, pwd, date, ip, help<br>';
-        break;
-      case 'ip':
-        try {
-          const response = await fetch('https://api64.ipify.org?format=json');
-          const data = await response.json();
-          const userIP = data.ip;
-          output.innerHTML += `Your IP address: ${userIP}<br>`;
-        } catch (error) {
-          output.innerHTML += 'Error retrieving IP address<br>';
+function appendToOutput(text) {
+  outputElement.innerHTML += `<br>${text}`;
+  outputElement.scrollTop = outputElement.scrollHeight;
+}
+
+function executeCommand(command) {
+  const parts = command.split(' ');
+
+  switch (parts[0]) {
+    case 'help':
+      appendToOutput("Available commands: ip, cd, pwd, ls, vim, help");
+      break;
+    case 'ip':
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          appendToOutput(`Your IP address is: ${data.ip}`);
+        })
+        .catch(error => {
+          appendToOutput("Unable to fetch IP address");
+        });
+      break;
+    case 'cd':
+      if (parts.length > 1) {
+        const targetDirectory = parts[1];
+        const contents = directories[currentDirectory];
+        
+        if (contents && contents.includes(targetDirectory)) {
+          if (targetDirectory === '..') {
+            const lastSlashIndex = currentDirectory.lastIndexOf('/');
+            currentDirectory = currentDirectory.substring(0, lastSlashIndex);
+          } else if (targetDirectory === currentDirectory.split('/').pop()) {
+            appendToOutput(`You are already in the ${targetDirectory} directory.`);
+          } else {
+            currentDirectory += '/' + targetDirectory;
+          }
+        } else {
+          appendToOutput(`No such directory: ${targetDirectory}`);
         }
-        break;
-      default:
-        output.innerHTML += `Command not found: ${command}<br>`;
-        break;
-    }
+      } else {
+        appendToOutput("Usage: cd <directory>");
+      }
+      break;
+    case 'pwd':
+      appendToOutput(currentDirectory);
+      break;
+    case 'ls':
+      const contents = directories[currentDirectory];
+      if (contents) {
+        appendToOutput(contents.join('  '));
+      } else {
+        appendToOutput(`No such directory: ${currentDirectory}`);
+      }
+      break;
+    case 'vim':
+      if (parts.length > 1) {
+        const filename = parts[1];
+        startVim(filename);
+      } else {
+        appendToOutput("Usage: vim <filename>");
+      }
+      break;
+    default:
+      appendToOutput(`Command not found: ${parts[0]}`);
+  }
+}
+const vimScript = document.createElement('script');
+vimScript.src = 'vim.js';
+document.body.appendChild(vimScript);
 
-    output.scrollTop = output.scrollHeight;
+document.addEventListener('keydown', function(event) {
+  if (!isVimMode) {
+    // Check for Escape key
+    if (event.key === 'Escape') {
+      clearConsole();
+      appendToOutput("Welcome to My Linux Terminal! (Made by: JVideo)");
+      appendToOutput("Type 'help' to see available commands.");
+      appendToOutput("If you would like to clear your terminal press ESC.");
+    }
+  } else {
+    // Handle Vim-like editor key press
+    handleVimKeyPress(event);
   }
 });
